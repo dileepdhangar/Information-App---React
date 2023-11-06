@@ -1,26 +1,53 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import './locationDisplay.css';
+import { Dna } from 'react-loader-spinner';
 
 const LocationDisplay = ({ locationData }) => {
+  const placeholderData = {
+    country: 'Loading...',
+    places: [],
+  };
+
+  // Move the useState and useEffect outside of the conditional block
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (locationData) {
+      // Simulate a data fetch or API call
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 2000); // Replace with your actual data fetch code
+    }
+  }, [locationData]); // Include locationData as a dependency
+
+  if (!locationData) {
+    return <p>No location data available yet.</p>;
+  }
+
   return (
     <div>
-      <h2>Location Information</h2>
-      {locationData ? (
+      {isLoading ? (
+        <Dna
+          visible={true}
+          height="80"
+          width="80"
+          ariaLabel="dna-loading"
+          wrapperStyle={{}}
+          wrapperClass="dna-wrapper"
+        />
+      ) : (
         <div>
-          <p>Country: {locationData.country}</p>
-       
-          <h3>Places:</h3>
+          <p style={{ fontWeight: 'bold', fontSize: '26px' }}>Country: {locationData.country}</p>
+          <h3 style={{ fontWeight: 'bold', fontSize: '30px' }}>Places:</h3>
           <ul>
             {locationData.places.map((place, index) => (
               <li key={index}>
-                <p>Place Name: {place['place name']}</p>
-                <p>state : {place['state']}</p>
-      
+                <p style={{ fontWeight: 'bold', fontSize: '24px' }}>Place Name: {place['place name']}</p>
+                <p style={{ fontWeight: 'bold', fontSize: '24px' }}>State: {place['state']}</p>
               </li>
             ))}
           </ul>
         </div>
-      ) : (
-        <p>No location data available yet.</p>
       )}
     </div>
   );
